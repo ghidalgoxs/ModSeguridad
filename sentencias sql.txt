@@ -1,0 +1,78 @@
+SELECT `strNombres`, `strApellidos` FROM `persona` WHERE `id` = (SELECT `idPersona` FROM `personarol`) ;
+SELECT `strNombre` FROM `rol` WHERE `id` = (SELECT `idRol` FROM `personarol`)
+
+
+CREATE VIEW AsignarRol AS 
+    SELECT
+    (
+   		SELECT `strNombres` 
+        FROM `persona` 
+        WHERE `id` = (SELECT `idPersona` FROM `personarol`)
+    ) AS Nombres,
+    (
+   		SELECT `strApellidos` 
+        FROM `persona` 
+        WHERE `id` = (SELECT `idPersona` FROM `personarol`)
+    ) AS Apellidos,
+    (
+    	SELECT `strNombre` 
+        FROM `rol` 
+        WHERE `id` = (SELECT `idRol` FROM `personarol`)
+    ) AS Rol
+
+
+
+CREATE VIEW AsignarRol1 AS 
+    SELECT
+    (
+   		SELECT `strNombres` 
+        FROM `persona` 
+        WHERE `id` = (SELECT `idPersona` FROM `personarol` WHERE `idPersona`=8 AND `idRol` = 5)
+    ) AS Nombres,
+    (
+   		SELECT `strApellidos` 
+        FROM `persona` 
+        WHERE `id` = (SELECT `idPersona` FROM `personarol` WHERE `idPersona`=8 AND `idRol` = 5)
+    ) AS Apellidos,
+    (
+    	SELECT `strNombre` 
+        FROM `rol` 
+        WHERE `id` = (SELECT `idRol` FROM `personarol` WHERE `idPersona`=8 AND `idRol` = 5)
+    ) AS Rol
+
+
+
+
+SELECT `persona`.`strNombres`, `persona`.`strApellidos`, `rol`.`strNombre` FROM `persona` INNER JOIN `rol` ON `persona`.`id` = 8 AND `rol`.`id` = 5;
+
+SELECT DISTINCT `persona`.`strNombres`, `persona`.`strApellidos`, `rol`.`strNombre`, `personarol`.`intEstado`
+FROM `persona` INNER JOIN `rol` ON `persona`.`id` = 8 AND `rol`.`id` = 5
+INNER JOIN `personarol` ON `persona`.`id` = 8 AND `rol`.`id` = 5; 
+
+
+
+SELECT DISTINCT `persona`.`id`,`rol`.`id` FROM `persona` INNER JOIN `rol` ON `persona`.`strNombres` = "Gustavo Xavier" AND `persona`.`strApellidos` = "Hidalgo" AND `rol`.`strNombre` = "Diector";
+
+
+"""SELECT DISTINCT `persona`.`id`,`rol`.`id`,`persona`.`strNombres`, `persona`.`strApellidos`, `rol`.`strNombre`, `personarol`.`intEstado`
+                                    FROM `persona` INNER JOIN `rol` ON `persona`.`id` = %s AND `rol`.`id` = %s 
+                                    INNER JOIN `personarol` ON `persona`.`id` = %s AND `rol`.`id` = %s; """ % (row[0], row[1],row[0], row[1]))
+
+
+
+ <p id="resultado"></p>
+
+                            <script>
+                                // JavaScript para manejar la selección del combobox
+                                const combobox = document.getElementById('listUsuario');
+                                const resultado = document.getElementById('resultado');
+                        
+                                combobox.addEventListener('change', () => {
+                                    const seleccionado = combobox.value;
+                                    resultado.textContent = `Dato seleccionado: ${seleccionado}`;
+                                    document.getElementById('rol').value = `${seleccionado}`;
+                                });
+                            </script>
+
+
+

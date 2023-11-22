@@ -1,0 +1,125 @@
+{% include 'header.html' %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <title>Gestión de usuarios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <h1 class="text-center mt-5 mb-5 text-primary">GESTIÓN DE USUARIOS - USUARIOS</h1>
+    <div class="container">
+        <div class="card shadow">
+            <div class="card-body">
+                <td><button class="btn btn-primary btn-sm" id="btn-primary" data-bs-toggle="modal" data-bs-target="#modal">Nuevo</button></td>
+                <br>
+                <br>                
+                <!--Modal de ingreso-->
+                <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar Usuario</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form action="/seg/usuario/add" method="post">
+                            <div class="row mb-3">
+                              <label> Nombre completo</label>
+                              <select name="idPersona" class="form-select" aria-label="Default select example" >
+                              
+                                  {% for dp in dataP %}  
+                                  <option  value="{{dp.id}}">{{dp.strNombres}} {{dp.strApellidos}}</option>
+                                  {% endfor %}
+                              </select> <br>                            
+                                <label>Nombre de Usuario</label>
+                                <input type="text" class="from-control mb-3" name="username">
+                                <br>                            
+                                <label>Contraseña</label>
+                                <input type="password" class="from-control mb-3" name="password">                                                        
+                            </div>
+                          <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--Fin modal de ingreso-->
+               
+                <!--Inicio tabla-->
+                  <table class="table mx-auto text-center table-bordered">
+                      <thead>
+                          <th scope="col">#</th>
+                          <th scope="col">Nombre completo</th>
+                          <th scope="col">Nombre de usuario</th>
+                          <th scope="col">Contraseña</th>
+                          <th scope="col">Edición</th>
+                          <th scope="col">Eliminación</th>
+                      </thead>
+                    
+                      <tbody>
+                          {% for du in dataU %}
+                              <tr>
+                                <td>{{du.id}}</td>
+                                <td>{{du.strNombres}} {{du.strApellidos}}</td>
+                                <td>{{du.username}}</td>
+                                <td>{{du.password}}</td>
+                                <td><button class="btn btn-primary btn-sm" id="btn-edit{{du.id}}" data-bs-toggle="modal" data-bs-target="#modal{{du.id}}">Editar</button></td>
+                                <td><a onclick="return confirm('¿Realmente desea eliminar el registro?')" href="{{ url_for('Usuario_blueprint.delete',id = du.id)}}" class="btn btn-danger btn-sm">Eliminar</a></td>
+                              </tr>
+
+                              <!--Ventana Modal-->
+                              <div class="modal fade" id="modal{{du.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edición de Usuarios</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <form action="/seg/usuario/edit/{{du.id}}/{{du.idPersona}}" method="post">
+                                          <div class="row mb-3"> 
+                                            <label>Nombre completo</label>
+                                            <input type="text" class="from-control mb-3" name="idPersona" value="{{du.strNombres}} {{du.strApellidos}}" disabled>
+                                            <br>
+                                            <label>Nombre de usuario</label>
+                                            <input type="text" class="from-control mb-3" name="username" value="{{du.username}}" >
+                                            <br>
+                                            <label>Contraseña</label>
+                                            <input type="password" class="from-control mb-3" name="password">
+                                          </div>                                                                         
+                                          <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary">Guardar </button>
+                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>
+                                  </div>
+                              </div>
+                          {% endfor %}
+                      </tbody>
+                    </table> 
+                  <!--Fin tabla-->
+                
+            </div>
+          </div>  
+        <!-- Pagiación-->
+        
+        <div class="row justify-content-md-center">
+          <div class="col-md-auto">
+            <span>
+              {{ paginacion.info }}
+              <hr />
+            </span>
+            {{ paginacion.links }}
+          </div>          
+        </div>
+    </div>
+</body>
+{% include 'footer.html' %}
